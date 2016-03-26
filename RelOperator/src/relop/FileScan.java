@@ -10,11 +10,11 @@ import heap.HeapScan;
  */
 public class FileScan extends Iterator {
     
-  HeapFile file;
-  HeapScan scan;
-  Schema schema;
-  boolean open;
-  RID last;
+  private HeapFile file;
+  private HeapScan scan;
+  //private Schema schema;
+  private boolean open;
+  private RID last;
 
   /**
    * Constructs a file scan, given the schema and heap file.
@@ -88,5 +88,9 @@ public class FileScan extends Iterator {
     //throw new UnsupportedOperationException("Not implemented");
     return last;
   }
-
+  
+  public HeapFile getFile() {
+    //added to use in HashJoin
+    return file;
+  }
 } // public class FileScan extends Iterator

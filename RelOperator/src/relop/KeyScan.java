@@ -11,7 +11,7 @@ import index.HashScan;
  */
 public class KeyScan extends Iterator {
 
-  private Schema schema;
+  //private Schema schema;
   private HashIndex index;
   private HashScan hashScan;
   private SearchKey key;

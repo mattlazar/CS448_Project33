@@ -10,11 +10,11 @@ import index.BucketScan;
  */
 public class IndexScan extends Iterator {
 
-  HeapFile file;
-  Schema schema;
-  HashIndex index;
-  BucketScan scan;
-  boolean open;
+  private HeapFile file;
+  //private Schema schema;
+  private HashIndex index;
+  private BucketScan scan;
+  private boolean open;
 
   /**
    * Constructs an index scan, given the hash index and schema.
@@ -96,5 +96,4 @@ public class IndexScan extends Iterator {
     //throw new UnsupportedOperationException("Not implemented");
     return scan.getNextHash();
   }
-
 } // public class IndexScan extends Iterator
