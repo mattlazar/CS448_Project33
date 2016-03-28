@@ -10,7 +10,6 @@ public class Projection extends Iterator {
 
   Iterator iter;
   Schema oldSchema;
-  Schema newSchema;
   Integer[] fields;
   Object[] values;
   /**
@@ -21,10 +20,10 @@ public class Projection extends Iterator {
     this.iter = iter;
     this.oldSchema = iter.getSchema();
     this.fields = fields;
-    this.newSchema = new Schema(fields.length);
+    this.schema = new Schema(fields.length);
     for (int i = 0; i < fields.length; i++) {
     //I'm not sure if Schemas are 0 or 1 indexed, I'll assume 0
-	newSchema.initField(i, this.oldSchema, fields[i]);
+	this.schema.initField(i, oldSchema, fields[i]);
     }
   }
 
@@ -79,7 +78,7 @@ public class Projection extends Iterator {
   public Tuple getNext() {
     //throw new UnsupportedOperationException("Not implemented");
     Tuple raw = iter.getNext();
-    Tuple toReturn = new Tuple(newSchema);
+    Tuple toReturn = new Tuple(this.schema);
     for (int i = 0; i < fields.length; i++) {
     	//again 0 or 1 indexed? assuming 0
 	toReturn.setField(i, raw.getField(fields[i]));

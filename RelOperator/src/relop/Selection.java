@@ -7,11 +7,19 @@ package relop;
  */
 public class Selection extends Iterator {
 
+  private Iterator iter;
+  private Tuple nextTuple;
+  private boolean tupleReady;
+  private Predicate[] preds;
+  
   /**
    * Constructs a selection, given the underlying iterator and predicates.
    */
   public Selection(Iterator iter, Predicate... preds) {
-    throw new UnsupportedOperationException("Not implemented");
+    this.iter = iter;
+    this.preds = preds;
+    this.tupleReady = false;
+    this.schema = iter.getSchema();
   }
 
   /**
@@ -19,35 +27,53 @@ public class Selection extends Iterator {
    * child iterators, and increases the indent depth along the way.
    */
   public void explain(int depth) {
-    throw new UnsupportedOperationException("Not implemented");
+    for (int i = 0; i < depth; i++) System.out.printf(" ");
+    System.out.printf("Selection only returns tuples that satisfy preds");
+    iter.explain(depth + 1);
   }
 
   /**
    * Restarts the iterator, i.e. as if it were just constructed.
    */
   public void restart() {
-    throw new UnsupportedOperationException("Not implemented");
+    iter.restart();
   }
 
   /**
    * Returns true if the iterator is open; false otherwise.
    */
   public boolean isOpen() {
-    throw new UnsupportedOperationException("Not implemented");
+    return iter.isOpen();
   }
 
   /**
    * Closes the iterator, releasing any resources (i.e. pinned pages).
    */
   public void close() {
-    throw new UnsupportedOperationException("Not implemented");
+    iter.close();
   }
 
   /**
    * Returns true if there are more tuples, false otherwise.
    */
   public boolean hasNext() {
-    throw new UnsupportedOperationException("Not implemented");
+    if (tupleReady) {
+	//we already have something for them
+	return true;
+    }
+
+    while (iter.hasNext()) {
+	nextTuple = iter.getNext();
+	boolean passPredTest = false;
+	for (Predicate pred : preds) {
+		if (pred.evaluate(nextTuple)) passPredTest = true;
+	}
+	if (passPredTest) {
+		tupleReady = true;
+		return true;
+	}
+    }
+    return false;
   }
 
   /**
@@ -56,7 +82,17 @@ public class Selection extends Iterator {
    * @throws IllegalStateException if no more tuples
    */
   public Tuple getNext() {
-    throw new UnsupportedOperationException("Not implemented");
+    if (tupleReady) {
+    	tupleReady = false;
+	return nextTuple;
+    } else {
+    	if (hasNext()) {
+		tupleReady = false;
+		return nextTuple;
+    	} else {
+		throw new IllegalStateException();
+	}
+    }
   }
 
 } // public class Selection extends Iterator

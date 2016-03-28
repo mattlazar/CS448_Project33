@@ -25,6 +25,7 @@ public class FileScan extends Iterator {
     this.scan = file.openScan();
     this.schema = schema;
     this.open = true;
+    this.last = new RID();
   }
 
   /**
@@ -43,7 +44,7 @@ public class FileScan extends Iterator {
     this.scan.close();
     this.scan = file.openScan();
     this.open = true;
-    this.last = null;
+    this.last = new RID();
   }
 
   /**

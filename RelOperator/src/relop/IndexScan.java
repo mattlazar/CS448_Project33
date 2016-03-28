@@ -4,6 +4,7 @@ import global.SearchKey;
 import heap.HeapFile;
 import index.HashIndex;
 import index.BucketScan;
+import global.RID;
 
 /**
  * Wrapper for bucket scan, an index access method.
@@ -15,6 +16,7 @@ public class IndexScan extends Iterator {
   private HashIndex index;
   private BucketScan scan;
   private boolean open;
+  private RID lastRID;
 
   /**
    * Constructs an index scan, given the hash index and schema.
@@ -77,7 +79,8 @@ public class IndexScan extends Iterator {
    */
   public Tuple getNext() {
     //throw new UnsupportedOperationException("Not implemented");
-    return new Tuple(schema, file.selectRecord(scan.getNext()));
+    this.lastRID = scan.getNext();
+    return new Tuple(schema, file.selectRecord(lastRID));
   }
 
   /**
@@ -95,5 +98,9 @@ public class IndexScan extends Iterator {
   public int getNextHash() {
     //throw new UnsupportedOperationException("Not implemented");
     return scan.getNextHash();
+  }
+
+  public RID getLastRID() {
+    return lastRID;
   }
 } // public class IndexScan extends Iterator
