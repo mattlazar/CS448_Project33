@@ -11,12 +11,13 @@ import index.HashScan;
  */
 public class KeyScan extends Iterator {
 
-  private Schema schema;
+  //private Schema schema;
   private HashIndex index;
   private HashScan hashScan;
   private SearchKey key;
   private HeapFile file;
   private boolean open;
+  private RID lastRID;
 
   /**
    * Constructs an index scan, given the hash index and schema.
@@ -81,8 +82,11 @@ public class KeyScan extends Iterator {
    */
   public Tuple getNext() {
     //throw new UnsupportedOperationException("Not implemented");
-    RID target = hashScan.getNext();
-    return new Tuple(schema, file.selectRecord(target));
+    lastRID = hashScan.getNext();
+    return new Tuple(schema, file.selectRecord(lastRID));
   }
 
+  public RID getLastRID() {
+    return lastRID;
+  }
 } // public class KeyScan extends Iterator
